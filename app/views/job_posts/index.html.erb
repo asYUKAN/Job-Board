@@ -1,0 +1,11 @@
+
+<%= link_to 'Log Out' ,destroy_user_session_path, class: "btn btn-danger", method: :delete %>
+<% @job_posts.each do |job_post| %>
+<%= job_post.title %><br />
+<%= job_post.company.name %><br />
+<%= job_post.mode %><br />
+<br />
+<br />
+
+    <% end%>
+
