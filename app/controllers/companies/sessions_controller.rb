@@ -5,12 +5,17 @@ class Companies::SessionsController < Devise::SessionsController
 
  # GET /resource/sign_in
   def new
-    super
+
+    redirect_to job_posts_path
+    
   end
 
  # POST /resource/sign_in
   def create
+    company = current_company 
+    
     super
+  
   end
 
   #DELETE /resource/sign_out
