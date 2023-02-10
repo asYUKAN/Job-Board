@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Defines the root path route ("/")
-  # devise_scope :user do
-  #   root to: "job_posts#index"
-  # end
+  devise_scope :user do
+    root to: "users/sessions#new"
+  end
 end
