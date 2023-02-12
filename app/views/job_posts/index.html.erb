@@ -186,6 +186,53 @@ ul {
 .mb-30 {
     margin-bottom: 30px;
 }
+.digg_pagination {
+  background: white;
+  cursor: default;
+  /* self-clearing method: */ }
+  .digg_pagination a, .digg_pagination span, .digg_pagination em {
+    padding: 0.2em 0.5em;
+    display: block;
+    float: left;
+    margin-right: 1px; }
+  .digg_pagination .disabled {
+    color: #999999;
+    border: 1px solid #dddddd; }
+  .digg_pagination .current {
+    font-style: normal;
+    font-weight: bold;
+    background: #0d6efd;
+    color: white;
+    border: 1px solid #0d6efd; }
+  .digg_pagination a {
+    text-decoration: none;
+    color: #105cb6;
+    border: 1px solid #9aafe5; }
+    .digg_pagination a:hover, .digg_pagination a:focus {
+      color: #000033;
+      border-color: #000033; }
+  .digg_pagination .page_info {
+    background: #0d6efd;
+    color: white;
+    padding: 0.4em 0.6em;
+    width: 22em;
+    margin-bottom: 0.3em;
+    text-align: center; }
+    .digg_pagination .page_info b {
+      color: #000033;
+      background: #6aa6ed;
+      padding: 0.1em 0.25em; }
+  .digg_pagination:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden; }
+  * html .digg_pagination {
+    height: 1%; }
+  *:first-child + html .digg_pagination {
+    overflow: hidden; }
+
 </style>
 <head>
 
@@ -241,9 +288,20 @@ ul {
                                     </div>
                                 </div>
                             </form>
-    
+                            <p></p>
                             <div class="filter-result">
-                                <p class="mb-30 ff-montserrat">Total Job Openings : <%= @job_posts.all.count %></p>
+                            <div class="digg_pagination d-flex justify-content-center">
+                            <div class="page_info rounded  my-4 ">
+                              <%= page_entries_info @posts %>
+                            </div>
+                            
+                          </div>
+                          <div class="digg_pagination d-flex justify-content-center">
+    
+                          <%= will_paginate @posts, :container => false %>
+                        </div>
+                               <!-- <p class="mb-30 ff-montserrat">Total Job Openings : <%= @job_posts.all.count %></p> -->
+                               <p></p>
                             <% @job_posts.each do |job_post| %>
                                 <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
                                     <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
@@ -275,26 +333,13 @@ ul {
                         </div>
     
                         <!-- START Pagination -->
-                        <nav aria-label="Page navigation">
-                            <ul class="pagination pagination-reset justify-content-center">
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
-                                        <i class="zmdi zmdi-long-arrow-left"></i>
-                                    </a>
-                                </li>
-                                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item d-none d-md-inline-block"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item d-none d-md-inline-block"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item"><a class="page-link" href="#">...</a></li>
-                                <li class="page-item"><a class="page-link" href="#">8</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">
-                                        <i class="zmdi zmdi-long-arrow-right"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
-                        <!-- END Pagination -->
+                        
+                        
+                        <div class="digg_pagination d-flex justify-content-center">
+    
+                        <%= will_paginate @posts, :container => false %>
+                      </div>
+                         <!-- END Pagination -->
                     </div>
                 </div>
     

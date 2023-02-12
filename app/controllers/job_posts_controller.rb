@@ -29,7 +29,8 @@ class JobPostsController < ApplicationController
     end
 
     def index
-        @job_posts = JobPost.all
+        # @job_posts = JobPost.all
+        @job_posts=JobPost.paginate(page: params[:page],per_page:5)
 
     end
 
