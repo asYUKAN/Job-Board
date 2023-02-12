@@ -1,0 +1,14 @@
+post a new job
+
+<%= form_with  scope: :job_post, url: job_posts_path, local: true do |f| %>
+
+<%= f.text_field :title %>
+<%= f.text_field :mode %>
+<%= f.url_field :apply_link %>
+<%= f.text_field :job_type %>
+<%= f.text_field :location %>
+<%= f.text_area :description %>
+<%= f.submit "Post a Job", class: "btn btn-primary" %>
+
+
+<% end %>

@@ -6,12 +6,14 @@ class Companies::RegistrationsController < Devise::RegistrationsController
 
   # GET /resource/sign_up
   def new
-    super
+    redirect_to job_posts_path
   end
 
   # POST /resource
   def create
-    super
+
+    redirect_to job_posts_path
+   
   end
 
   # GET /resource/edit
