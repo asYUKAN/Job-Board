@@ -6,7 +6,11 @@ class Companies::RegistrationsController < Devise::RegistrationsController
 
   # GET /resource/sign_up
   def new
-    super
+    if current_user.nil?
+      super 
+    else 
+     redirect_to new_user_session_path
+    end
     
   end
 

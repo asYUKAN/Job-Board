@@ -2,16 +2,24 @@
 
 class Users::SessionsController < Devise::SessionsController
   # before_action :configure_sign_in_params, only: [:create]
-
+  
+  
   # # GET /resource/sign_in
   def new
-    super
+    if current_company.nil?
+      super 
+    else 
+      redirect_to new_company_session_path
+    end
+    
+   
   end
 
   # POST /resource/sign_in
   def create
     
-    super
+      super 
+  
    
   end
 

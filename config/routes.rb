@@ -23,4 +23,6 @@ Rails.application.routes.draw do
   get '/company_posts', to: "job_posts#company_job_posts"
   get '/job_applications', to: "job_applications#user_job_applications"
   get '/job_applicants/:id', to: 'job_posts#job_post_applicants'
+
+  get '/search', to: 'job_posts#search'
 end

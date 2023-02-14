@@ -7,13 +7,17 @@ class Companies::SessionsController < Devise::SessionsController
 
  # GET /resource/sign_in
   def new
-   super
+    if current_user.nil?
+      super 
+    else 
+     redirect_to new_user_session_path
+    end
+
   end
 
 #  # POST /resource/sign_in
   def create
-    # session[:current_company_id] = company.id
-    super
+   super
   end
 
   #DELETE /resource/sign_out
