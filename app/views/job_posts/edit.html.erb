@@ -100,7 +100,7 @@
                         <div class="card-header text-primary font-weight-bold">Posting a Job</div>
                         <div class="card-body">
                             
-                        <%= form_with  scope: :job_post , url: job_posts_path, local: true do |f| %>
+                        <%= form_with(model: @job_post, local: true) do |f| %>
                                 <div class="form-group row">
                                     <label for="full_name" class="col-md-4 col-form-label text-md-right">Role</label>
                                     <div class="col-md-6">
@@ -145,10 +145,14 @@
                                     </div>
                                 </div>
                                
-                                    <div class="col-md-6 offset-md-4">
+                                    <div class="col-md-6 offset-md-4 d-flex justify-content-center">
                   
-                                        <%= f.submit "Post", class: "btn btn-primary" %>
-      
+                                        <%= f.submit "Edit", class: "btn btn-info" %>
+                                
+                                    </div>
+                                      <br>
+                                    <div class="col-md-6 offset-md-4 d-flex justify-content-center">
+                                    <%= link_to "Back", :back, class: "btn btn-primary d-flex justify-content-center" %>
                                     </div>
                                 </div>
                                 <% end %>

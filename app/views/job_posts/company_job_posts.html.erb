@@ -232,10 +232,6 @@ ul {
     height: 1%; }
   *:first-child + html .digg_pagination {
     overflow: hidden; }
-    a {
-  color: inherit; /* blue colors for links too */
-  text-decoration: inherit; /* no underline */
-}
 
 </style>
 <head>
@@ -255,10 +251,10 @@ ul {
                 </div>
     
                 <div class="row">
-                    <div class="col-lg-10 mx-auto">
-                        <div class="career-search mb-60">
+                   <div class="col-lg-10 mx-auto">
+                         <div class="career-search mb-60">
     
-                          <!--  <form action="#" class="career-form mb-60">
+                         <!--  <form action="#" class="career-form mb-60">
                                 <div class="row">
                                     <div class="col-md-6 col-lg-3 my-3">
                                         <div class="input-group position-relative">
@@ -307,13 +303,12 @@ ul {
                                <!-- <p class="mb-30 ff-montserrat">Total Job Openings : <%= @job_posts.all.count %></p> -->
                                <p></p>
                             <% @job_posts.each do |job_post| %>
-                              
-                                <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
+                              <a href="#">
+                                <div class="job-box d-md-flex align-items-center justify-content-between mb-30" >
                                     <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
-                                       <a href="<%= job_post_path(job_post)%>"> 
-                                       <div class="img-holder mr-md-4 mb-md-0 mb-4 mx-auto mx-md-0 d-md-none d-lg-flex">
+                                        <div class="img-holder mr-md-4 mb-md-0 mb-4 mx-auto mx-md-0 d-md-none d-lg-flex">
                                             JB
-                                        </div></a>
+                                        </div>
                                         <div class="job-content">
                                             <h5 class="text-center text-md-left"><%= job_post.title %> | <%= job_post.company.name %></h5>
                                             
@@ -328,35 +323,27 @@ ul {
                                                     <i class="zmdi zmdi-time mr-2"></i> <%= job_post.mode %>
                                                 </li>
                                             </ul>
+
+                                            <ul class="d-md-flex flex-wrap text-capitalize ff-open-sans">
+                                            <li class="mr-md-4">
+                                             <button class="btn-info mr-md-4"><%= link_to raw('<i class="zmdi zmdi-edit mr-2"></i>Edit'), edit_job_post_path(job_post.id),method: :patch,  class: 'btn-info '%></button>
+                                            </li>
+                                            <li class="mr-md-4">
+                                              <%= button_to raw('<i class="zmdi zmdi-delete mr-2"></i>Delete'), job_post_path(job_post.id), method: :delete, class: 'btn-danger mr-md-4' %>
+                                            </li>
+                                            </ul>
+                                            
+                                          
+                                          
                                         </div>
                                     </div>
                                     
-                                   <% if (current_user && job_post.job_applications.where(user_id: current_user.id).empty?) %>
-                                        <div class="job-right my-4 flex-shrink-0">
-                                            <%=form_for(job_post,:action=>"update") do |f| %>
-                                              <%= submit_tag "Share My Profile", :name=>"share", :class=> "btn d-block w-100 d-sm-inline-block btn-info"%>
-                                              
-                                            <%end%>
-                                        </div>
-                                    <% elsif current_user %>
-                                        <div class="job-right my-4 flex-shrink-0 btn btn-success disabled">
-                                        Profile Shared
-                                        </div>
-                                    <% else %>
-                                        <div class="job-right my-4 flex-shrink-0">
-                                            <%=form_for(job_post,:action=>"update") do |f| %>
-                                              <%= submit_tag "Share My Profile", :name=>"share", :class=> "btn d-block w-100 d-sm-inline-block btn-info"%>
-                                            <%end%>
-                                        </div>
-                                    <% end %>
-                                   
                                 </div>
-                               
+                              
                             <% end%>
-                            
-
+                            </a>
                                 </div>
-                               
+                                
                         </div>
     
                         <!-- START Pagination -->

@@ -6,8 +6,8 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
   
 
-  has_many :job_applications
-  #has_many :job_posts, :through => :job_applications 
+  has_many :job_applications, dependent: :destroy
+  has_many :job_posts, :through => :job_applications 
   
   
 end

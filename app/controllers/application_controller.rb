@@ -4,6 +4,9 @@ class ApplicationController < ActionController::Base
 
   def index
   end
+
+
+  
   protected
 
   def after_sign_in_path_for(resource)
@@ -11,6 +14,6 @@ class ApplicationController < ActionController::Base
   end
   
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :contact, :resume_link, address_attributes: [:country, :state, :city, :area, :postal_code]])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :contact, :resume_link])
   end
 end

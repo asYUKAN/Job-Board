@@ -48,6 +48,7 @@ gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
 gem "bootsnap", require: false
 gem 'will_paginate', '~> 3.3'
 gem 'byebug'
+
 # Use Sass to process CSS
 # gem "sassc-rails"
 
@@ -76,3 +77,5 @@ group :test do
   gem "selenium-webdriver"
   gem "webdrivers"
 end
+
+gem "city-state", "~> 0.1.0"

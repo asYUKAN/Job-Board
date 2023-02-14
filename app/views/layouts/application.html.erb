@@ -16,61 +16,80 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+    <style>
+
+
+    .navbar .navbar-nav .nav-link:hover {
+    background-color: #fff;
+    color: #212529;
+  }  
+.navbar .navbar-nav .nav-link {
+  padding: 0.6em;
+  font-size: 1.2em;
+  transition: all 0.5s;
+  color: #fff;
+}
+.navbar .navbar-brand {
+  padding: 0 0.6em;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+@media only screen and (min-width: 992px) {
+  .navbar {
+    padding: 0;
+  }
+  .navbar .navbar-nav .nav-link{
+    padding: 1em 0.7em;
+  }
+  .navbar .navbar-brand {
+    padding: 0 0.8em;
+  }
+}
+    </style>
     </head>
 
   <body>
-  <nav class="navbar navbar-expand-lg" style="background-color: #f5f8fa">
-  <a class="navbar-brand" href="#">Job Board</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Link</a>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Dropdown
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Something else here</a>
-        </div>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-      </li>
-    </ul>
-
-    <% if company_signed_in? %>
-    <%= link_to 'Post a Job' ,new_job_post_path, class: "btn btn-success mr-sm-2", method: :post %>
-    <%end%>
-   
-    <!--<form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
-    </form> -->
-    <div>
-    <% unless (user_signed_in? || company_signed_in?)  %>
-    <%= link_to 'Login', new_user_session_path, class: "btn my-2 my-sm-0 btn-primary", method: :get %>
-   <% end %>
+  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #3B71CA;">
+    <a class="navbar-brand" href="/">JOB BOARD</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler8"
+        aria-controls="navbarToggler8" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarToggler8">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="#">Home</a>
+            </li>
+            <% unless user_signed_in? || company_signed_in? %>
+                <li class="nav-item">
+                <%= link_to 'Login',new_user_session_path, method: :get, class: 'nav-link' %>
+                </li>
+                <li class="nav-item">
+                <%= link_to 'Register', new_user_registration_path, method: :get, class: 'nav-link' %>
+                </li>
+            <%end%>
+            <% if company_signed_in? %>
+                <li class="nav-item">
+                  
+                    <%= link_to 'Job Posts', company_posts_path, method: :get, class: 'nav-link' %>
+              
+                </li>
+                <li class="nav-item">
+                <%= link_to 'Post Job' ,new_job_post_path, method: :post, class: 'nav-link' %>
+                </li>
+                <li class="nav-item">
+                <%= button_to 'LogOut' ,destroy_company_session_path, method: :delete , class: 'nav-link bg-danger'%>
+                </li>
+            <%end%>
+            <% if user_signed_in? %>
+                
+                <li class="nav-item">
+                <%= button_to 'LogOut' ,destroy_user_session_path, method: :delete , class: 'nav-link bg-danger'%>
+                </li>
+            <%end%>
+        </ul>
     </div>
-    <% if company_signed_in? %>
-    <%= button_to 'Log Out' ,destroy_company_session_path, class: "btn btn-danger", method: :delete %>
-    <%end%>
-    <% if user_signed_in? %>
-    <%= button_to 'Log Out' ,destroy_user_session_path, class: "btn btn-danger", method: :delete %>
-    <%end%>
-  
-  </div>
 </nav>
   <p class="notice"><%= notice %></p>
   <p class="alert"><%= alert %></p>
