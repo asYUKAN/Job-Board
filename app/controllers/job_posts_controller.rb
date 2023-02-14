@@ -2,7 +2,7 @@ class JobPostsController < ApplicationController
     
     #before_action :authenticate!
    # before_action :authenticate_company!, only: [:create , :company_job_posts, :edit, :update, :destroy]
-
+    before_action :authenticate_company!, only: [:job_post_applicants]
 
     def new
         # @address=CS
@@ -33,7 +33,7 @@ class JobPostsController < ApplicationController
         @job_post.company_id = current_company.id
         @job_post.save
        
-        redirect_to job_post_path(@job_post.id)
+        redirect_to company_posts_path
     end
 
     def index
@@ -56,16 +56,12 @@ class JobPostsController < ApplicationController
       
             @job_post=JobPost.find(params[:id])
 
-            if current_company && current_company.id == @job_post.company_id && @job_post.update(params.require(:job_post).permit(:title, :mode,  :apply_link, :job_type, :location, :description))
-                flash[:notice]="Job Post edited successfully"
-                redirect_to @job_post
-            
-            end
+           
 
             if params[:share]   
                 
               if current_user.nil?
-                flash[:notice]="You need to signin to share your profile!"
+                flash[:notice]="You need to signin as user to share your profile!"
                  redirect_to new_user_session_path
             
 
@@ -82,6 +78,13 @@ class JobPostsController < ApplicationController
                 flash[:notice]="Profile already shared successfully"
                 redirect_to job_posts_path  
               end
+            else
+                if current_company && current_company.id == @job_post.company_id && @job_post.update(params.require(:job_post).permit(:title, :mode,  :apply_link, :job_type, :location, :description))
+                    flash[:notice]="Job Post edited successfully"
+                    redirect_to company_posts_path
+                
+                end
+
             end
            
         
@@ -105,9 +108,21 @@ class JobPostsController < ApplicationController
 
     end
 
-    def destroy
+    def job_post_applicants
         @job_post=JobPost.find(params[:id])
-        if current_company.id == @job_post.company_id
+        if current_company && current_company.id == @job_post.company_id 
+            @job_applicants=@job_post.job_applications.paginate(page: params[:page],per_page:10)
+        else 
+            flash[:notice]="You can only see applicants of your job posts"
+            redirect_to company_posts_path
+        end
+    end
+
+
+    def destroy
+      
+        @job_post=JobPost.find(params[:id])
+        if current_company && current_company.id == @job_post.company_id
             flash[:notice]="You can delete your posts"
            @job_post.destroy 
            redirect_to company_posts_path

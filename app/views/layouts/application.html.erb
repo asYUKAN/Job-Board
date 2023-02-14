@@ -58,8 +58,18 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarToggler8">
         <ul class="navbar-nav ml-auto">
+           <% if company_signed_in? %>
+           <li class="nav-item active">
+           <a class="nav-link " >Hi! <%= current_company.name %></a>
+            </li>
+           <% end %>
+           <% if user_signed_in? %>
+           <li class="nav-item active">
+              <a class="nav-link" >Hi! <%= current_user.name %></a>
+            </li>
+           <% end %>
             <li class="nav-item">
-                <a class="nav-link" href="#">Home</a>
+                <a class="nav-link" href="/">Home</a>
             </li>
             <% unless user_signed_in? || company_signed_in? %>
                 <li class="nav-item">
@@ -70,6 +80,11 @@
                 </li>
             <%end%>
             <% if company_signed_in? %>
+              <li class="nav-item">
+                      
+                <%= link_to 'Profile', edit_company_registration_path, method: :get, class: 'nav-link' %>
+          
+               </li>
                 <li class="nav-item">
                   
                     <%= link_to 'Job Posts', company_posts_path, method: :get, class: 'nav-link' %>
@@ -83,7 +98,14 @@
                 </li>
             <%end%>
             <% if user_signed_in? %>
-                
+                <li class="nav-item">
+                          
+                 <%= link_to 'Profile', edit_user_registration_path, method: :get, class: 'nav-link' %>
+          
+                </li>
+                <li class="nav-item">
+                <%= link_to 'My Applications' ,job_applications_path, method: :get, class: 'nav-link' %>
+                </li>
                 <li class="nav-item">
                 <%= button_to 'LogOut' ,destroy_user_session_path, method: :delete , class: 'nav-link bg-danger'%>
                 </li>

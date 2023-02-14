@@ -232,6 +232,10 @@ ul {
     height: 1%; }
   *:first-child + html .digg_pagination {
     overflow: hidden; }
+    a {
+  color: inherit; /* blue colors for links too */
+  text-decoration: inherit; /* no underline */
+}
 
 </style>
 <head>
@@ -251,10 +255,10 @@ ul {
                 </div>
     
                 <div class="row">
-                   <div class="col-lg-10 mx-auto">
-                         <div class="career-search mb-60">
+                    <div class="col-lg-10 mx-auto">
+                        <div class="career-search mb-60">
     
-                         <!--  <form action="#" class="career-form mb-60">
+                          <!--  <form action="#" class="career-form mb-60">
                                 <div class="row">
                                     <div class="col-md-6 col-lg-3 my-3">
                                         <div class="input-group position-relative">
@@ -300,58 +304,50 @@ ul {
     
                           <%= will_paginate @posts, :container => false %>
                         </div>
-                               <!-- <p class="mb-30 ff-montserrat">Total Job Openings : <%= @job_posts.all.count %></p> -->
+                               <!-- <p class="mb-30 ff-montserrat">Total Job Applications : <%= @job_applications.all.count %></p> -->
                                <p></p>
-                            <% @job_posts.each do |job_post| %>
-                              
-                                <div class="job-box d-md-flex align-items-center justify-content-between mb-30" >
+                            <% @job_applications.each do |n| %>
+                            
+                                <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
                                     <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
-                                        <div class="img-holder mr-md-4 mb-md-0 mb-4 mx-auto mx-md-0 d-md-none d-lg-flex">
+                                       <a href="<%= job_post_path(n.job_post)%>"> 
+                                       <div class="img-holder mr-md-4 mb-md-0 mb-4 mx-auto mx-md-0 d-md-none d-lg-flex">
                                             JB
-                                        </div>
+                                        </div></a>
                                         <div class="job-content">
-                                            <h5 class="text-center text-md-left"><%= job_post.title %> | <%= job_post.company.name %></h5>
+                                            <h5 class="text-center text-md-left"><%= n.job_post.title %> | <%= n.job_post.company.name %></h5>
                                             
                                             <ul class="d-md-flex flex-wrap text-capitalize ff-open-sans">
                                                 <li class="mr-md-4">
-                                                    <i class="zmdi zmdi-pin mr-2"></i> <%= job_post.location %>
+                                                    <i class="zmdi zmdi-pin mr-2"></i> <%= n.job_post.location %>
                                                 </li>
                                                 <li class="mr-md-4">
-                                                <i class="zmdi zmdi-case mr-2"></i>  <%= job_post.job_type%>
+                                                <i class="zmdi zmdi-case mr-2"></i>  <%= n.job_post.job_type%>
                                                 </li>
                                                 <li class="mr-md-4">
-                                                    <i class="zmdi zmdi-time mr-2"></i> <%= job_post.mode %>
+                                                    <i class="zmdi zmdi-time mr-2"></i> <%= n.job_post.mode %>
                                                 </li>
                                             </ul>
 
                                             <ul class="d-md-flex flex-wrap text-capitalize ff-open-sans">
-                                            <li class="mr-md-4">
-                                             <button class="btn-info mr-md-4"><%= link_to raw('<i class="zmdi zmdi-edit mr-2"></i>Edit'), edit_job_post_path(job_post.id),method: :patch,  class: 'btn-info '%></button>
-                                            </li>
-                                            <li class="mr-md-4">
-                                              <%= button_to raw('<i class="zmdi zmdi-delete mr-2"></i>Delete'), job_post_path(job_post.id), method: :delete, class: 'btn-danger mr-md-4' %>
-                                            </li>
-
-                                            <li class="mr-md-4">
                                            
-                                            <button class="btn-primary"><%= link_to raw('<i class="zmdi zmdi-accounts mr-2 "></i>View Applicants'), '/job_applicants/%d' % [job_post.id], method: :get, class: 'btn-primary ' %></button>
-                                           
+                                            <li class="mr-md-4">
+                                         
+                                              <%= button_to raw('<i class="zmdi zmdi-delete mr-2"></i>Drop'), job_application_path(id: n.id), method: :delete, class: 'btn-danger mr-md-4' %>
                                             </li>
                                             </ul>
-                                            Total Applicants Count: <%= job_post.job_applications.count %>
-                                          
-
-                                          
                                         </div>
-                                        
                                     </div>
                                     
+                                   
+                                   
                                 </div>
-                              
+                               
                             <% end%>
-                           
+                            
+
                                 </div>
-                                
+                               
                         </div>
     
                         <!-- START Pagination -->
