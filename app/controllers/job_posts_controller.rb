@@ -42,7 +42,10 @@ class JobPostsController < ApplicationController
 
 
     end
-
+    
+    def search
+        @job_posts= JobPost.where("title Like ?", JobPost.sanitize_sql_like(params[:q])+"%").or(JobPost.where("job_type Like ?", JobPost.sanitize_sql_like(params[:q])+"%").or(JobPost.where("mode Like ?", JobPost.sanitize_sql_like(params[:q])+"%"))).or(JobPost.where("location Like ?", JobPost.sanitize_sql_like(params[:q])+"%"))
+    end
     def edit 
         @job_post = JobPost.find(params[:id])
         unless current_company && current_company.id == @job_post.company_id

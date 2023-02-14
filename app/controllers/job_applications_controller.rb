@@ -23,6 +23,19 @@ class JobApplicationsController <  ApplicationController
     end
 
 
+    def update
+       
+        @job_application= JobApplication.find(params[:id])
+
+        if @job_application.update(params.require(:job_application).permit(:staus))
+            flash[:notice]="Remarks sent successfully"
+            redirect_to company_posts_path
+        
+        end
+
+    end
+
+
 
     def create
         

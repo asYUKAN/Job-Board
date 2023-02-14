@@ -336,9 +336,13 @@ ul {
                                               <%= button_to raw('<i class="zmdi zmdi-delete mr-2"></i>Drop'), job_application_path(id: n.id), method: :delete, class: 'btn-danger mr-md-4' %>
                                             </li>
                                             </ul>
+                                            <%unless n.staus.nil? %>
+                                             <strong>Remarks By Company: </strong> <%= n.staus %> 
+                                            <% end %>
+                                            
                                         </div>
                                     </div>
-                                    
+                                  
                                    
                                    
                                 </div>
