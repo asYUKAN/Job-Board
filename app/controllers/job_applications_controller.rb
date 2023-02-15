@@ -17,7 +17,7 @@ class JobApplicationsController <  ApplicationController
            @job_application.destroy 
            redirect_to job_applications_path
         else
-            flash[:notice]="You can only drop your application"
+            flash[:error]="You can only drop your application"
             redirect_to cjob_applications_path
         end
     end

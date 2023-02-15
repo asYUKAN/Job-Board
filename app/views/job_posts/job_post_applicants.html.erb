@@ -333,7 +333,7 @@ ul {
                                         <td><%= job_applicant.user.email %></td>
                                         <td><%= job_applicant.user.contact %></td>
                                         <td>
-                                            <button type="button" class="btn btn-outline-primary btn-sm m-0 waves-effect"><a href="<%= job_applicant.user.resume_link %>">Resume</a></button>
+                                            <button type="button" class="btn btn-outline-light btn-sm m-0 "><a href="<%= job_applicant.user.resume_link %>" target="_blank">Resume</a></button>
                                         </td>
                                         <%=form_for(job_applicant,:action=>"update") do |f| %>
                                             <%= hidden_field_tag 'id', job_applicant.id %>

@@ -258,14 +258,14 @@ ul {
                     <div class="col-lg-10 mx-auto">
                         <div class="career-search mb-60">
     
-                           <form action="#" class="career-form mb-60">
+                           <form method="GET" action="/search" class="career-form mb-60">
                                 <div class="row">
-                                    <div class="col-md-6 col-lg-3 my-3">
+                                    <div class="col-md-6 col-lg-9 my-3">
                                         <div class="input-group position-relative">
-                                            <input type="text" class="form-control" placeholder="Enter Your Keywords" id="keywords">
-                                        </div>
+                                            <input class="form-control" type="search" placeholder="Enter Your Keywords" aria-label="Search" name="q" method="GET">
+                                            </div>
                                     </div>
-                                    <div class="col-md-6 col-lg-3 my-3">
+                                   <!-- <div class="col-md-6 col-lg-3 my-3">
                                         <div class="select-container">
                                             <select class="custom-select">
                                                 <option selected="">Location</option>
@@ -284,9 +284,9 @@ ul {
                                                 <option value="3">Web developer</option>
                                             </select>
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <div class="col-md-6 col-lg-3 my-3">
-                                        <button type="button" class="btn btn-lg btn-block btn-light btn-custom" id="contact-submit">
+                                        <button type="submit" class="btn btn-lg btn-block btn-light btn-custom" id="contact-submit">
                                             Search
                                         </button>
                                     </div>
@@ -330,7 +330,7 @@ ul {
                                             </ul>
                                         </div>
                                     </div>
-                                    
+                                 <% unless company_signed_in? %>   
                                    <% if (current_user && job_post.job_applications.where(user_id: current_user.id).empty?) %>
                                         <div class="job-right my-4 flex-shrink-0">
                                             <%=form_for(job_post,:action=>"update") do |f| %>
@@ -349,7 +349,7 @@ ul {
                                             <%end%>
                                         </div>
                                     <% end %>
-                                   
+                                   <% end %>
                                 </div>
                                
                             <% end%>

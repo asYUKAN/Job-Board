@@ -44,12 +44,13 @@ class JobPostsController < ApplicationController
     end
     
     def search
-        @job_posts= JobPost.where("title Like ?", JobPost.sanitize_sql_like(params[:q])+"%").or(JobPost.where("job_type Like ?", JobPost.sanitize_sql_like(params[:q])+"%").or(JobPost.where("mode Like ?", JobPost.sanitize_sql_like(params[:q])+"%"))).or(JobPost.where("location Like ?", JobPost.sanitize_sql_like(params[:q])+"%"))
+        @job_posts=JobPost.where("title Like ?", JobPost.sanitize_sql_like(params[:q])+"%").or(JobPost.where("job_type Like ?", JobPost.sanitize_sql_like(params[:q])+"%").or(JobPost.where("mode Like ?", JobPost.sanitize_sql_like(params[:q])+"%"))).or(JobPost.where("location Like ?", JobPost.sanitize_sql_like(params[:q])+"%")).paginate(page: params[:page],per_page:5)
+        render "job_posts/index"
     end
     def edit 
         @job_post = JobPost.find(params[:id])
         unless current_company && current_company.id == @job_post.company_id
-            flash[:notice]="You can only edit your posts"
+            flash[:error]="You can only edit your posts"
             redirect_to job_posts_path
         end
         
@@ -64,7 +65,7 @@ class JobPostsController < ApplicationController
             if params[:share]   
                 
               if current_user.nil?
-                flash[:notice]="You need to signin as user to share your profile!"
+                flash[:error]="You need to signin as user to share your profile!"
                  redirect_to new_user_session_path
             
 
@@ -78,7 +79,7 @@ class JobPostsController < ApplicationController
 
               else
                  
-                flash[:notice]="Profile already shared successfully"
+                flash[:info]="Profile already shared successfully"
                 redirect_to job_posts_path  
               end
             else
@@ -116,7 +117,7 @@ class JobPostsController < ApplicationController
         if current_company && current_company.id == @job_post.company_id 
             @job_applicants=@job_post.job_applications.paginate(page: params[:page],per_page:10)
         else 
-            flash[:notice]="You can only see applicants of your job posts"
+            flash[:error]="You can only see applicants of your job posts"
             redirect_to company_posts_path
         end
     end
@@ -126,11 +127,11 @@ class JobPostsController < ApplicationController
       
         @job_post=JobPost.find(params[:id])
         if current_company && current_company.id == @job_post.company_id
-            flash[:notice]="You can delete your posts"
+            flash[:notice]="Job Post has been deleted successfully"
            @job_post.destroy 
            redirect_to company_posts_path
         else
-            flash[:notice]="You can only delete your posts"
+            flash[:error]="You can only delete your posts"
             redirect_to company_posts_path
         end
     end
