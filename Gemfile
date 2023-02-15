@@ -30,7 +30,9 @@ gem "jbuilder"
 gem 'wysihtml5-rails'
 
 gem 'bootstrap-sass'
-
+gem 'ckeditor'
+gem 'carrierwave'
+gem 'mini_magick'
 # Use Redis adapter to run Action Cable in production
 # gem "redis", "~> 4.0"
 

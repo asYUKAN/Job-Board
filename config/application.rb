@@ -8,6 +8,7 @@ Bundler.require(*Rails.groups)
 
 module JobBoarding
   class Application < Rails::Application
+    config.autoload_paths += %W(#{config.root}/app/models/ckeditor)
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0
 
@@ -18,5 +19,6 @@ module JobBoarding
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+   
   end
 end

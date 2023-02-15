@@ -140,15 +140,18 @@
                                 <div class="form-group row">
                                     <label for="present_address" class="col-md-4 col-form-label text-md-right">Description</label>
                                     <div class="col-md-6">
-                                    <%= f.text_area :description, {class: "form-control"}%>
+                                    <%= f.cktext_area :description, {class: "form-control", ckeditor: { language: 'uk'}}%>
                                     
                                     </div>
                                 </div>
                                
-                                    <div class="col-md-6 offset-md-4">
-                  
+                                <div class="col-md-6 offset-md-4 d-flex justify-content-center">
                                         <%= f.submit "Post", class: "btn btn-primary" %>
       
+                                    </div>
+                                    <br>
+                                    <div class="col-md-6 offset-md-4 d-flex justify-content-center">
+                                    <%= link_to "Back", :back, class: "btn btn-primary d-flex justify-content-center" %>
                                     </div>
                                 </div>
                                 <% end %>

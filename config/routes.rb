@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  mount Ckeditor::Engine => '/ckeditor'
   resources :addresses
   devise_for :companies,  controllers: { sessions: "companies/sessions", registrations: "companies/registrations", confirmations: "companies/confirmations", passwords: "companies/passwords", unlocks: "companies/unlocks", index:"companies/index"}
   devise_for :users,  controllers: { sessions: "users/sessions", registrations: "users/registrations", confirmations: "users/confirmations",  passwords: "users/passwords", unlocks: "users/unlocks"}

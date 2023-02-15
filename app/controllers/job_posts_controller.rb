@@ -20,8 +20,13 @@ class JobPostsController < ApplicationController
       end
 
     def show
-        @job_post = JobPost.find(params[:id])
-        @company = Company.find(@job_post.company_id)
+        @job_post = JobPost.find_by_id(params[:id])
+        if @job_post.nil?
+            redirect_to job_posts_path
+        else
+            @company = Company.find(@job_post.company_id)
+        end
+       
     end
 
     def create
@@ -84,7 +89,7 @@ class JobPostsController < ApplicationController
               end
             else
                 if current_company && current_company.id == @job_post.company_id && @job_post.update(params.require(:job_post).permit(:title, :mode,  :apply_link, :job_type, :location, :description))
-                    flash[:notice]="Job Post edited successfully"
+                    flash[:notice]="Job Post updated successfully"
                     redirect_to company_posts_path
                 
                 end
