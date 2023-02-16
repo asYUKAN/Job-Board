@@ -1,23 +1,13 @@
 class JobPostsController < ApplicationController
     
-    #before_action :authenticate!
-   # before_action :authenticate_company!, only: [:create , :company_job_posts, :edit, :update, :destroy]
+   
     before_action :authenticate_company!, only: [:job_post_applicants]
 
     def new
-        # @address=CS
         unless current_company
             redirect_to company_session_path
         end
     end
-
-    def authenticate!
-        if current_user || current_company
-          a=1
-        else
-            redirect_to new_user_session_path
-        end
-      end
 
     def show
         @job_post = JobPost.find_by_id(params[:id])
@@ -30,6 +20,7 @@ class JobPostsController < ApplicationController
     end
 
     def create
+
         unless current_company
             redirect_to company_session_path
         end
@@ -68,25 +59,25 @@ class JobPostsController < ApplicationController
            
 
             if params[:share]   
+                    
+                if current_user.nil?
+                    flash[:error]="You need to signin as user to share your profile!"
+                    redirect_to new_user_session_path
                 
-              if current_user.nil?
-                flash[:error]="You need to signin as user to share your profile!"
-                 redirect_to new_user_session_path
-            
 
-             elsif(@job_post.job_applications.where(user_id: current_user.id).empty?)
-                @job_application=JobApplication.new 
-                @job_application.job_post_id=params[:id]
-                @job_application.user_id=current_user.id 
-                @job_application.save
-                flash[:notice]="Profile shared successfully"
-                redirect_to job_posts_path 
+                elsif(@job_post.job_applications.where(user_id: current_user.id).empty?)
+                    @job_application=JobApplication.new 
+                    @job_application.job_post_id=params[:id]
+                    @job_application.user_id=current_user.id 
+                    @job_application.save
+                    flash[:notice]="Profile shared successfully"
+                    redirect_to job_posts_path 
 
-              else
-                 
-                flash[:info]="Profile already shared successfully"
-                redirect_to job_posts_path  
-              end
+                else
+                    
+                    flash[:info]="Profile already shared successfully"
+                    redirect_to job_posts_path  
+                end
             else
                 if current_company && current_company.id == @job_post.company_id && @job_post.update(params.require(:job_post).permit(:title, :mode,  :apply_link, :job_type, :location, :description))
                     flash[:notice]="Job Post updated successfully"

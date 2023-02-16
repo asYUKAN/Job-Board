@@ -4,6 +4,111 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css" integrity="sha256-3sPp8BkKUE7QyPSl6VfBByBroQbKxKG7tsusY2mhbVY=" crossorigin="anonymous" />
 
 
+   <style>
+   body{
+    background:#eee;
+}
+
+hr {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border: 0;
+    border-top: 1px solid #FFFFFF;
+}
+a {
+    color: #82b440;
+    text-decoration: none;
+}
+.blog-comment::before,
+.blog-comment::after,
+.blog-comment-form::before,
+.blog-comment-form::after{
+    content: "";
+	display: table;
+	clear: both;
+}
+
+.blog-comment{
+    padding-left: 15%;
+	padding-right: 15%;
+}
+
+.blog-comment ul{
+	list-style-type: none;
+	padding: 0;
+}
+
+.blog-comment img{
+	opacity: 1;
+	filter: Alpha(opacity=100);
+	-webkit-border-radius: 4px;
+	   -moz-border-radius: 4px;
+	  	 -o-border-radius: 4px;
+			border-radius: 4px;
+}
+
+
+
+.blog-comment .post-comments{
+	border: 1px solid #eee;
+    margin-bottom: 20px;
+    margin-left: 10px;
+	margin-right: 0px;
+    padding: 10px 20px;
+    position: relative;
+    -webkit-border-radius: 4px;
+       -moz-border-radius: 4px;
+       	 -o-border-radius: 4px;
+    		border-radius: 4px;
+	background: #fff;
+	color: #6b6e80;
+	position: relative;
+}
+
+.blog-comment .meta {
+	font-size: 13px;
+	color: #aaaaaa;
+	padding-bottom: 8px;
+	margin-bottom: 10px !important;
+	border-bottom: 1px solid #eee;
+}
+
+.blog-comment ul.comments ul{
+	list-style-type: none;
+	padding: 0;
+	margin-left: 90px;
+}
+
+.reply_toggle_button {
+    width: 70px;
+   
+}
+.hide {
+    visibility: hidden;
+    display: none;
+}
+
+.show {
+    visibility: visible;
+    
+}
+
+
+   </style>
+   <script type="application/javascript">
+    function clickMe(id) 
+    {
+        console.log(id+"button");
+        var text = document.getElementById(id);
+        var tt=document.getElementById(id+"button");
+        text.classList.toggle("hide");
+        text.classList.toggle("show");
+        tt.classList.toggle("hide");
+        tt.classList.toggle("show");
+       
+
+    }
+    </script>
 </head>
 <body>
 <div class="row mt-3 m-5">
@@ -71,4 +176,82 @@
         </div>
     </div>
 </div>
+
+
+
+    <div class="row mt-2 m-5">
+        
+		<div class="col-sm-12">
+		    <div class="blog-comment">
+            <h3 class="text-secondary">Questions</h3>
+            <hr/>
+            <%= form_with url: "/discussion/question", method: :post do |f| %>
+                <div class="panel-body">
+                    <%= hidden_field_tag 'job_post_id', @job_post.id %>
+                    <%= f.text_area :content, :class=> "form-control", :placeholder=>"Ask your question here", :required => true%>
+                    
+                    <div class="mar-top clearfix">
+                   <%= submit_tag "Ask Question", :name=>"question",  :class=> "btn btn-sm mt-2 btn-secondary pull-right"%>
+                    
+                    </div>
+                </div>
+            <%end%>
+				
+            <hr/>
+				<ul class="comments">
+                    <% @job_post.discussions.all.each do |discussion| %>
+                        <% if discussion.parent_id.nil? %>
+                                    <li class="clearfix">
+                                    
+                                    <div class="post-comments">
+                                        <p class="meta"><%=discussion.created_at.strftime("%b %-d, %Y :%H:%M %Z") %> <a href="#"><%= discussion.author_id %></a> says :<i class="pull-right"><span class="reply_toggle_button" onclick='clickMe("<%= discussion.id.to_s %>")'><small class="text-primary">Reply</small></span></i></p>
+                                        <p>
+                                        
+                                            <%=discussion.content %>
+                                        </p>
+                                    </div>
+                                    
+                                    <%= form_with url: "/discussion/answer", method: :post do |f| %>
+                                        
+                                            <%= hidden_field_tag 'parent_id', discussion.id %>
+                                            <%= hidden_field_tag 'job_post_id', discussion.job_post_id %>
+                                            <div class="d-flex align-items-end">
+                                                <%= f.text_area :content, :class=> "ml-3 post-comments col-sm-11 hide ", :placeholder=>"Reply here", :required => true , :id=>discussion.id.to_s %>
+                                            
+                                                <%= f.button :submit , :name=>"question",  :class=> "btn btn-sm btn-secondary hide mb-4", :style=> "", :id=>(discussion.id.to_s+"button") do %> 
+                                                    <i class='zmdi zmdi-mail-send'></i>
+                                                    <% end %>
+                                                </div>
+                                    <%end%>
+                                  
+                                
+                                    </li>
+                                    
+                                       
+                                        <ul class="comments">
+                                            <% @job_post.discussions.all.each do |reply| %>
+                                                <% if reply.parent_id==discussion.id %>
+                                                    <li class="clearfix">
+                                                        
+                                                        <div class="post-comments">
+                                                            <p class="meta"><%=reply.created_at.strftime("%b %-d, %Y :%H:%M %Z") %> <a href="#"><%= reply.author_id %></a> says :</p>
+                                                            <p>
+                                                                <%=reply.content %>
+                                                            </p>
+                                                        </div>
+                                                    </li>
+                                                <% end %>
+                                            
+                                            <% end %>       
+                                        </ul>
+                                    
+                        <% end %>
+                     <% end %>
+				</ul>
+			</div>
+		</div>
+	
+</div>
+
 </body>
+

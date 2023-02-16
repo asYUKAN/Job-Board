@@ -8,9 +8,11 @@ Rails.application.routes.draw do
   resource :users
 
   resource :companies
-  resource :address
+ 
 
   resource :job_application
+
+  resource :discussion
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Defines the root path route ("/")
@@ -25,5 +27,7 @@ Rails.application.routes.draw do
   get '/job_applications', to: "job_applications#user_job_applications"
   get '/job_applicants/:id', to: 'job_posts#job_post_applicants'
 
+  post '/discussion/question', to: 'discussions#create_question'
+  post '/discussion/answer', to: 'discussions#create_answer'
   get '/search', to: 'job_posts#search'
 end
