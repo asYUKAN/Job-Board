@@ -14,6 +14,8 @@ class Companies::RegistrationsController < Devise::RegistrationsController
     
   end
 
+  def 
+
   # POST /resource
   def create
     super

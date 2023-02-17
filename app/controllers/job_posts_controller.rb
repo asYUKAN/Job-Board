@@ -10,6 +10,8 @@ class JobPostsController < ApplicationController
     end
 
     def show
+        @users= User.all 
+        @companies =Company.all
         @job_post = JobPost.find_by_id(params[:id])
         if @job_post.nil?
             redirect_to job_posts_path
@@ -40,11 +42,18 @@ class JobPostsController < ApplicationController
     end
     
     def search
-        @job_posts=JobPost.where("title Like ?", JobPost.sanitize_sql_like(params[:q])+"%").or(JobPost.where("job_type Like ?", JobPost.sanitize_sql_like(params[:q])+"%").or(JobPost.where("mode Like ?", JobPost.sanitize_sql_like(params[:q])+"%"))).or(JobPost.where("location Like ?", JobPost.sanitize_sql_like(params[:q])+"%")).paginate(page: params[:page],per_page:5)
+        job_posts_ids=JobPost.where("title Like ?", JobPost.sanitize_sql_like(params[:q])+"%").or(JobPost.where("job_type Like ?", JobPost.sanitize_sql_like(params[:q])+"%").or(JobPost.where("mode Like ?", JobPost.sanitize_sql_like(params[:q])+"%"))).or(JobPost.where("location Like ?", JobPost.sanitize_sql_like(params[:q])+"%")).pluck(:id).uniq
+        job_posts_ids+=JobPost.joins(:company).where("name Like ?",JobPost.sanitize_sql_like(params[:q])+"%").pluck(:id)
+        @job_posts=JobPost.where(id: job_posts_ids).paginate(page: params[:page],per_page:5)
         render "job_posts/index"
     end
     def edit 
-        @job_post = JobPost.find(params[:id])
+        @job_post = JobPost.find_by_id(params[:id])
+        if @job_post.nil?
+            flash[:error]="Job Post is not available"
+            redirect_to job_posts_path
+            return
+        end
         unless current_company && current_company.id == @job_post.company_id
             flash[:error]="You can only edit your posts"
             redirect_to job_posts_path
@@ -54,9 +63,13 @@ class JobPostsController < ApplicationController
     
     def update
       
-            @job_post=JobPost.find(params[:id])
-
-           
+            @job_post=JobPost.find_by_id(params[:id])
+            
+            if @job_post.nil?
+                flash[:error]="Job Post is not available"
+                redirect_to job_posts_path
+                return
+            end
 
             if params[:share]   
                     
@@ -103,13 +116,27 @@ class JobPostsController < ApplicationController
     def company_job_posts
 
         if current_company
-        @job_posts=Company.find(current_company.id).job_posts.paginate(page: params[:page],per_page:5)
+           @company=Company.find_by_id(current_company.id)
+            if @company.nil?
+                flash[:error]="Company is not available"
+                redirect_to job_posts_path
+                return
+            end
+        
+            @job_posts=@company.job_posts.paginate(page: params[:page],per_page:5)
+        else
+            redirect_to job_posts_path
         end
 
     end
 
     def job_post_applicants
-        @job_post=JobPost.find(params[:id])
+        @job_post=JobPost.find_by_id(params[:id])
+        if @job_post.nil?
+            flash[:error]="Job Post is not available"
+            redirect_to job_posts_path
+            return
+        end
         if current_company && current_company.id == @job_post.company_id 
             @job_applicants=@job_post.job_applications.paginate(page: params[:page],per_page:10)
         else 
@@ -121,7 +148,12 @@ class JobPostsController < ApplicationController
 
     def destroy
       
-        @job_post=JobPost.find(params[:id])
+        @job_post=JobPost.find_by_id(params[:id])
+        if @job_post.nil?
+            flash[:error]="Job Post is not available"
+            redirect_to job_posts_path
+            return
+        end
         if current_company && current_company.id == @job_post.company_id
             flash[:notice]="Job Post has been deleted successfully"
            @job_post.destroy 

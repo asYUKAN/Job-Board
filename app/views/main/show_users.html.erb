@@ -1,4 +1,6 @@
 
+
+
 <head>
 <style>
 @font-face {
@@ -10,7 +12,7 @@
 }
 body{
     background:#f5f5f5;
-   }
+    margin-top:20px;}
 
 /* ===== Career ===== */
 .career-form {
@@ -232,10 +234,6 @@ ul {
     height: 1%; }
   *:first-child + html .digg_pagination {
     overflow: hidden; }
-    a {
-  color: inherit; /* blue colors for links too */
-  text-decoration: inherit; /* no underline */
-}
 
 </style>
 <head>
@@ -254,78 +252,83 @@ ul {
                 </div>
     
                 <div class="row">
-                    <div class="col-lg-10 mx-auto">
-                        <div class="career-search mb-60">
+                   <div class="col-lg-10 mx-auto">
+                         <div class="career-search mb-60">
     
-                        
-                           
+                         
+                            <p></p>
                             <div class="filter-result">
                             <div class="digg_pagination d-flex justify-content-center">
                             <div class="page_info rounded  my-4 ">
-                              <%= page_entries_info @posts %>
+                              <%= page_entries_info @users %>
                             </div>
                             
                           </div>
                           <div class="digg_pagination d-flex justify-content-center">
-    
-                          <%= will_paginate @posts, :container => false %>
+                          <% a=(@users.current_page-1)*(@users.per_page) +1%>
+                          <%= will_paginate @users, :container => false %>
                         </div>
-                               <!-- <p class="mb-30 ff-montserrat">Total Job Applications : <%= @job_applications.all.count %></p> -->
+                               <!-- <p class="mb-30 ff-montserrat">Total Applicants for this post : <%= @users.all.count %></p> -->
                                <p></p>
-                            <% @job_applications.each do |n| %>
-                            
-                                <div onclick="location.href='<%= job_post_path(n.job_post)%>';" style="cursor: pointer;" class=" job-box d-md-flex align-items-center justify-content-between mb-30">
-                                    <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
-                                     
-                                       <div class="img-holder mr-md-4 mb-md-0 mb-4 mx-auto mx-md-0 d-md-none d-lg-flex">
-                                            JB
-                                        </div>
-                                        <div class="job-content">
-                                          <div class="d-flex">
-                                          <h4 class="mr-1  ff-open-sans font-weight-bold">
-                                          <%= n.job_post.title %> 
-                                          </h4> |
-                                          <h4 class="ml-1 ff-open-sans text-secondary">
-                                          <%= n.job_post.company.name %>
-                                          </h4>
-                                         </div>
-                                            
-                                            <ul class="p-0 mt-3 d-md-flex flex-wrap text-capitalize ff-open-sans">
-                                                <li class="mr-md-4">
-                                                    <i class="zmdi zmdi-pin mr-2"></i> <%= n.job_post.location %>
-                                                </li>
-                                                <li class="mr-md-4">
-                                                <i class="zmdi zmdi-case mr-2"></i>  <%= n.job_post.job_type%>
-                                                </li>
-                                                <li class="mr-md-4">
-                                                    <i class="zmdi zmdi-time mr-2"></i> <%= n.job_post.mode %>
-                                                </li>
-                                            </ul>
-
-                                            <ul class="p-0 mt-2 d-md-flex flex-wrap text-capitalize ff-open-sans">
-                                           
-                                            <li class="mr-md-4">
-                                         
-                                              <%= button_to raw('<i class="zmdi zmdi-delete mr-2"></i>Drop'), job_application_path(id: n.id), method: :delete, class: 'btn-danger mr-md-4' %>
-                                            </li>
-                                            </ul>
-                                            <%unless n.staus.nil? %>
-                                             <strong>Remarks By Company: </strong> 
-                                             <p class="text-break"><%= n.staus %></p> 
-                                            <% end %>
-                                            
-                                        </div>
-                                    </div>
-                                  
-                                   
-                                   
-                                </div>
+                           
+                              
                                
-                            <% end%>
-                            
+                                <!-- Start Card -->
+                                <table class="table table-striped table-responsive-md btn-table">
 
+                                    <thead>
+                                        <tr>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Contact</th>
+                                        <th>Resume Link</th>
+                                        <th>No.Of.Applications</th>
+                                        <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    
+                                    <% @users.each do |user| %>
+                                    
+                                        <tr>
+                                        <th scope="row"><%=a %></th>
+                                        <% a+=1 %>
+                                        <td><%= user.name %></td>
+                                        
+                                        <td><%=user.email %></td>
+                                        <td><%=user.contact %></td>
+                                        <td>
+                                            <button type="button" class="btn btn-outline-light btn-sm m-0 "><a href="<%= user.resume_link %>" target="_blank">Resume</a></button>
+                                        </td>
+                                        
+                                        <td class="d-flex justify-content-center"><%= user.job_applications.all.count %></td>
+                                        
+                                        <td>
+                                        <%= form_with url: "/user/delete", method: :delete do |f| %>
+        
+                                            <%= hidden_field_tag 'id', user.id %>
+                                              <%= f.button :submit , :name=>"question",  :class=> " d-flex btn btn-danger " , :style=>"float:left" do %> 
+                                                  <span>Remove</span>
+                                                  
+                                              <% end %>
+                                          
+                                          <%end%>
+                                        </td>
+                                       
+                                        </tr>
+                                        <% end%>
+                                    </tbody>
+
+                                    </table>
+                                <!-- END Card -->
+                                <!-- start -->
+                                
+                                <!-- end -->
+                           
+                           
                                 </div>
-                               
+                                
                         </div>
     
                         <!-- START Pagination -->
@@ -333,10 +336,16 @@ ul {
                         
                         <div class="digg_pagination d-flex justify-content-center">
     
-                        <%= will_paginate @posts, :container => false %>
+                        <%= will_paginate @users, :container => false %>
                       </div>
                          <!-- END Pagination -->
+                         
                     </div>
+                   
                 </div>
-    
+            
+                <div class="  d-flex justify-content-center">
+                <%= link_to "Back", :back, class: "btn btn-primary d-flex justify-content-center" %>
+                </div>
             </div>
+            

@@ -64,7 +64,15 @@ a {
 	color: #6b6e80;
 	position: relative;
 }
-
+.delete-button{
+    background: none;
+	color: inherit;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	
+}
 .blog-comment .meta {
 	font-size: 13px;
 	color: #aaaaaa;
@@ -81,6 +89,7 @@ a {
 
 .reply_toggle_button {
     width: 70px;
+    cursor: pointer;
    
 }
 .hide {
@@ -98,7 +107,7 @@ a {
    <script type="application/javascript">
     function clickMe(id) 
     {
-        console.log(id+"button");
+        
         var text = document.getElementById(id);
         var tt=document.getElementById(id+"button");
         text.classList.toggle("hide");
@@ -108,6 +117,7 @@ a {
        
 
     }
+    
     </script>
 </head>
 <body>
@@ -115,52 +125,98 @@ a {
   <div class="col-sm-12">
     <div class="card shadow bg-light rounded">
     <div class="card-header font-weight-bold">
-        <h3><%=@job_post.title%> </h3>
-        <h5><%=@company.name%></h5>
-            <% unless company_signed_in? %>   
-            <% if (current_user && @job_post.job_applications.where(user_id: current_user.id).empty?) %>
-                <div class="job-right my-4 flex-shrink-0">
-                    <%=form_for(@job_post,:action=>"update") do |f| %>
-                        <%= submit_tag "Share My Profile", :name=>"share", :class=> "btn d-block w-10 d-sm-inline-block btn-info"%>
-                        
-                    <%end%>
-                </div>
-            <% elsif current_user %>
-                <div class="job-right my-4 flex-shrink-0 ">
-                <button class=" btn d-block w-10 d-sm-inline-block btn-success disabled" >Profile Shared</button>
-                </div>
-            <% else %>
-                <div class="job-right my-4 flex-shrink-0">
-                    <%=form_for(@job_post,:action=>"update") do |f| %>
-                        <%= submit_tag "Share My Profile", :name=>"share", :class=> "btn d-block w-10 d-sm-inline-block btn-info"%>
-                    <%end%>
-                </div>
-            <% end %>
-            <% end %>
 
-            <div class="job-right my-4 flex-shrink-0 ">
-                    <%= link_to "Back", :back, class: "btn btn-primary " %>
+
+        <div style="width: 50%; float:left">
+           
+            <h3><%=@job_post.title%> </h3>
+       
+            <h5><%=@company.name%></h5>
+            <% unless ( company_signed_in? || (current_user &&  user_signed_in? && current_user.is_admin==true) )%>
+                <% if (current_user && @job_post.job_applications.where(user_id: current_user.id).empty?) %>
+                    <div class="job-right my-4 flex-shrink-0">
+                        <%=form_for(@job_post,:action=>"update") do |f| %>
+                            <%= submit_tag "Share My Profile", :name=>"share", :class=> "btn d-block w-10 d-sm-inline-block btn-info"%>
+                            
+                        <%end%>
+                    </div>
+                <% elsif current_user %>
+                    <div class="job-right my-4 flex-shrink-0 ">
+                    <button class=" btn d-block w-10 d-sm-inline-block btn-success disabled" >Profile Shared</button>
+                    </div>
+                <% else %>
+                    <div class="job-right my-4 flex-shrink-0">
+                        <%=form_for(@job_post,:action=>"update") do |f| %>
+                            <%= submit_tag "Share My Profile", :name=>"share", :class=> "btn d-block w-10 d-sm-inline-block btn-info"%>
+                        <%end%>
+                    </div>
+                <% end %>
+            <% end %>
+            <h6><span class="font-weight-bold">Posted</span> <%= raw @job_post.created_at.strftime("%-d-%-m-%Y: %H:%M %Z")%></h6>
+
+            <!-- Delete -->
+            <% if current_user &&  user_signed_in? && current_user.is_admin==true  %>
+                
+
+                <%= form_with url: "/job_post/delete", method: :delete do |f| %>
+        
+                            <%= hidden_field_tag 'id', @job_post.id %>
+                        <%= f.button :submit , :name=>"question",  :class=> " d-flex btn btn-danger " , :style=>"float:left" do %> 
+                            <span>Delete</span>
+                            
+                        <% end %>
+                    
+                <%end%>
+            <% end %>
+           
+
+        </div>
+        
+        <div style="width: 50%; float:right">
+             <h3><%=@company.name%></h3>
+             <h6><span class="font-weight-bold">Founded</span> <%= @company.founded %></h6>
+             <h6><span class="font-weight-bold mr-2">Company Size</span><%= @company.size %> </h6>
+        </div>
+        
+            
+    </div>
+        <div class="card-body">
+                
+            <div style="width: 50%; float:left">
+                <i class="zmdi zmdi-pin mr-2 "></i> <%= @job_post.location %>
+                        
+                <i class="zmdi zmdi-case mr-2 ml-5"></i>  <%= @job_post.job_type %>
+            
+                <i class="zmdi zmdi-time mr-2 ml-5"></i> <%= @job_post.mode %>
             </div>
 
-            <h6>Posted: <%= raw @job_post.created_at.strftime("%-d-%-m-%Y: %H:%M %Z")%></h6>
-            
-    </div>
-    <div class="card-body">
-            
-                    <i class="zmdi zmdi-pin mr-2 "></i> <%= @job_post.location %>
-                   
-                    <i class="zmdi zmdi-case mr-2 ml-5"></i>  <%= @job_post.job_type %>
-                   
-                    <i class="zmdi zmdi-time mr-2 ml-5"></i> <%= @job_post.mode %>
-       
-      </div>
+            <div style="width: 50%; float:right">
+            <i class="zmdi zmdi-phone mr-2 "></i> <%= @company.contact %>
+            <i class="zmdi zmdi-email mr-2 ml-5"></i> <%= @company.email %>
+            <i class="zmdi zmdi-link mr-2 ml-5"></i> <a href="<%= @company.website_link %>"><%= @company.website_link %></a>
+            </div>
+                    
+        
+        </div>
     </div>
   </div>
-   <div class="col-sm-1">
-      
-   </div>
+   
   
 </div>
+<div class="row mt-2 m-5">
+    <div class="col-sm-12 ">
+        <div class="card  shadow-inner shadow bg-light rounded">
+        <div class="card-header font-weight-bold">
+        <h4>About Company</h4>
+       </div>
+        <div class="card-body">
+            <%= raw @company.about %>
+        </div>
+        </div>
+        
+    </div>
+</div>
+
 <div class="row mt-2 m-5">
     <div class="col-sm-12 ">
         <div class="card  shadow-inner shadow bg-light rounded">
@@ -172,7 +228,7 @@ a {
         </div>
         </div>
         <div class=" mt-3 d-flex justify-content-center">
-                 <%= link_to "Back", :back, class: "btn btn-primary d-flex justify-content-center" %>
+                 <%= link_to "Back", job_posts_path , class: "btn btn-primary d-flex justify-content-center" %>
         </div>
     </div>
 </div>
@@ -183,12 +239,12 @@ a {
         
 		<div class="col-sm-12">
 		    <div class="blog-comment">
-            <h3 class="text-secondary">Questions</h3>
+            <h3 class="text-secondary">Forum</h3>
             <hr/>
             <%= form_with url: "/discussion/question", method: :post do |f| %>
                 <div class="panel-body">
                     <%= hidden_field_tag 'job_post_id', @job_post.id %>
-                    <%= f.text_area :content, :class=> "form-control", :placeholder=>"Ask your question here", :required => true%>
+                    <%= f.text_area :content, :class=> "form-control", :placeholder=>"Ask your question here", :style=> " min-height: 50px;", :required => true%>
                     
                     <div class="mar-top clearfix">
                    <%= submit_tag "Ask Question", :name=>"question",  :class=> "btn btn-sm mt-2 btn-secondary pull-right"%>
@@ -204,45 +260,196 @@ a {
                                     <li class="clearfix">
                                     
                                     <div class="post-comments">
-                                        <p class="meta"><%=discussion.created_at.strftime("%b %-d, %Y :%H:%M %Z") %> <a href="#"><%= discussion.author_id %></a> says :<i class="pull-right"><span class="reply_toggle_button" onclick='clickMe("<%= discussion.id.to_s %>")'><small class="text-primary">Reply</small></span></i></p>
-                                        <p>
+                                        <p class="meta">
+                                                <span class="text-info h5">
+                                                <% if discussion.author_id.nil? %>
+                                                <%= "Removed Account" %>
+                                                <% elsif discussion.is_user %>
+                                                <%= @users.find(discussion.author_id).name %>
+                                                <% else %>
+                                                <%= @companies.find(discussion.author_id).name %>
+                                                <%end %>
+                                            </span>
+
+                                            
+                                           
+
+                                            <!-- Edit Enable Button -->
+                                            <% if current_user && user_signed_in? && discussion.is_user==true && discussion.author_id==current_user.id %>
+                                                <span class="reply_toggle_button h6 float-right " onclick='clickMe("<%= discussion.id.to_s+"_edit" %>")'>
+                                                    <small class="text-primary">Edit</small>
+                                                </span>
+                                                
+                                            <% elsif current_company &&  company_signed_in? && (discussion.is_user.nil? || discussion.is_user==false) && discussion.author_id==current_company.id %>
+                                                <span class="reply_toggle_button h6 float-right " onclick='clickMe("<%= discussion.id.to_s+"_edit" %>")'>
+                                                    <small class="text-primary">Edit</small>
+                                                </span>
+                                            <% else %>
+                                               <span></span>
+                                            <% end %>
+
+                                            <!-- Reply Enable Button -->
+                                            <%if current_user || current_company %>
+                                            <span class="reply_toggle_button float-right h6" onclick='clickMe("<%= discussion.id.to_s %>")'>
+                                              <small class="text-primary">Reply</small>
+                                            </span>
+                                            <%end%>
+                                            
+                                            <!-- Delete by Company -->
+                                            <% if current_company &&  company_signed_in? && @company.id == current_company.id  %>
+                                                
+
+                                                <%= form_with url: "/discussion/", method: :delete do |f| %>
                                         
-                                            <%=discussion.content %>
+                                                    <%= hidden_field_tag 'id', discussion.id %>
+                                                        <%= f.button :submit , :name=>"question",  :class=> " d-flex btn btn-danger " , :style=>"float:right" do %> 
+                                                            <span>Delete</span>
+                                                           
+                                                        <% end %>
+                                                   
+                                                <%end%>
+                                            <% end %>
+
+                                            <!-- Discussion Delete by Admin -->
+                                            <% if current_user &&  user_signed_in? && current_user.is_admin==true  %>
+                                                
+
+                                                <%= form_with url: "/discussion/delete", method: :delete do |f| %>
+                                        
+                                                    <%= hidden_field_tag 'id', discussion.id %>
+                                                        <%= f.button :submit , :name=>"question",  :class=> " d-flex btn btn-danger " , :style=>"float:right" do %> 
+                                                            <span>Delete</span>
+                                                           
+                                                        <% end %>
+                                                   
+                                                <%end%>
+                                            <% end %>
+
+                                            <p class="" ><%=time_ago_in_words discussion.created_at %> ago </p>
+                                           
                                         </p>
+                                        <p class="text-break">
+                                        <%=discussion.content %>
+                                        </p>
+                                        
+                                       
+                                       
+                                        
+                                           
+                                       
+                                        
                                     </div>
-                                    
+                                   
                                     <%= form_with url: "/discussion/answer", method: :post do |f| %>
                                         
                                             <%= hidden_field_tag 'parent_id', discussion.id %>
                                             <%= hidden_field_tag 'job_post_id', discussion.job_post_id %>
                                             <div class="d-flex align-items-end">
-                                                <%= f.text_area :content, :class=> "ml-3 post-comments col-sm-11 hide ", :placeholder=>"Reply here", :required => true , :id=>discussion.id.to_s %>
+                                                <!-- Reply -->
+                                                <%= f.text_area :content , :rows=> "1", :class=> "ml-3 post-comments col-sm-11 hide ", :placeholder=>"Reply here", :required => true , :id=>discussion.id.to_s , :style=> " min-height: 50px;"%>
                                             
-                                                <%= f.button :submit , :name=>"question",  :class=> "btn btn-sm btn-secondary hide mb-4", :style=> "", :id=>(discussion.id.to_s+"button") do %> 
-                                                    <i class='zmdi zmdi-mail-send'></i>
-                                                    <% end %>
-                                                </div>
+                                                <%= f.button :submit , :name=>"question",  :class=> "ml-2 btn btn-sm btn-secondary hide mb-4", :style=> "", :id=>(discussion.id.to_s+"button") do %> 
+                                                    Reply<i class='zmdi zmdi-mail-send ml-1'></i>
+                                                <% end %>
+                                              
+                                            </div>
                                     <%end%>
+
+
+
+                                    <%= form_with url: "/discussion/edit", method: :get do |f| %>
+                                        
+                                        <%= hidden_field_tag 'id', discussion.id %>
+                                      
+                                        <div class="d-flex align-items-end">
+                                            <%= f.text_area :content , :rows=> "2", :class=> "ml-3 post-comments col-sm-11 hide ", :placeholder=>"Reply here", :required => true , :id=>(discussion.id.to_s+"_edit") , :style=> " min-height: 50px;" , :value=>discussion.content%>
+                                        
+                                            <%= f.button :submit , :name=>"question",  :class=> "ml-2 btn btn-sm btn-secondary hide mb-4", :style=> "", :id=>(discussion.id.to_s+"_editbutton") do %> 
+                                                Update
+                                                <% end %>
+                                        </div>
+                                    <%end%>
+
+                                    
                                   
                                 
                                     </li>
-                                    
-                                       
+                                   
                                         <ul class="comments">
                                             <% @job_post.discussions.all.each do |reply| %>
                                                 <% if reply.parent_id==discussion.id %>
                                                     <li class="clearfix">
                                                         
                                                         <div class="post-comments">
-                                                            <p class="meta"><%=reply.created_at.strftime("%b %-d, %Y :%H:%M %Z") %> <a href="#"><%= reply.author_id %></a> says :</p>
-                                                            <p>
-                                                                <%=reply.content %>
-                                                            </p>
+                                                            <p class="meta"> 
+                                                                    <span class="text-info h5">
+                                                                        <% if reply.author_id.nil? %>
+                                                                        <%= "Removed Account" %>
+                                                                        <% elsif reply.is_user %>
+                                                                        <%= @users.find(reply.author_id).name %>
+                                                                        <% else  %>
+                                                                        <%= @companies.find(reply.author_id).name %>
+                                                                        <%end %>
+                                                                    </span>
+                                
+                                                           <% if current_user && user_signed_in? && reply.is_user==true && reply.author_id==current_user.id %>
+                                                                <span class="reply_toggle_button float-right h6" onclick='clickMe("<%= reply.id.to_s+"_cedit" %>")'>
+                                                                    <small class="text-primary">Edit</small>
+                                                                </span>
+                                                                
+                                                            <% elsif current_company &&  company_signed_in? && (reply.is_user.nil? || reply.is_user==false) && reply.author_id==current_company.id %>
+                                                                <span class="reply_toggle_button float-right h6" onclick='clickMe("<%= reply.id.to_s+"_cedit" %>")'>
+                                                                    <small class="text-primary">Edit</small>
+                                                                </span>
+                                                            <% else %>
+                                                                <span></span>
+                                                            <% end %>
+                
+                                                           
+                                                            <!-- Discussion Delete by Admin -->
+                                                            <% if current_user &&  user_signed_in? && current_user.is_admin==true  %>
+                                                                
+
+                                                                <%= form_with url: "/reply/delete", method: :delete do |f| %>
+                                                        
+                                                                    <%= hidden_field_tag 'id', reply.id %>
+                                                                        <%= f.button :submit , :name=>"question",  :class=> " d-flex btn btn-danger " , :style=>"float:right" do %> 
+                                                                            <span>Delete</span>
+                                                                        
+                                                                        <% end %>
+                                                                
+                                                                <%end%>
+                                                            <% end %>
+
+                                                            <p class="" ><%=time_ago_in_words discussion.created_at %> ago </p>
+                                                           </p>
+                                                           <p class="text-break">
+                                                           <%=reply.content %>
+                                                           </p>
+
+                                                            
                                                         </div>
+                                                        <%= form_with url: "/discussion/edit", method: :get do |f| %>
+                                        
+                                                            <%= hidden_field_tag 'id', reply.id %>
+                                                          
+                                                            <div class="d-flex align-items-end">
+                                                                <%= f.text_area :content , :rows=> "1", :class=> "ml-3 post-comments col-sm-11 hide ", :placeholder=>"Reply here", :required => true , :id=>(reply.id.to_s+"_cedit") , :style=> " min-height: 50px;" , :value=>reply.content%>
+                                                            
+                                                                <%= f.button :submit , :name=>"question",  :class=> "ml-2 btn btn-sm btn-secondary hide mb-4", :style=> "", :id=>(reply.id.to_s+"_ceditbutton") do %> 
+                                                                    Update
+                                                                    <% end %>
+                                                            </div>
+                                                        <%end%>
+
+                                                        
+                    
                                                     </li>
+                                                    
                                                 <% end %>
                                             
-                                            <% end %>       
+                                            <% end %>      
+                                             
                                         </ul>
                                     
                         <% end %>

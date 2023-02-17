@@ -146,6 +146,12 @@ ul {
   }
 }
 
+a.fill-div {
+    display: block;
+   
+    text-decoration: none;
+}
+
 .job-overview .job-detail ul {
   margin-bottom: 28px;
 }
@@ -249,8 +255,7 @@ ul {
                      <div class="col-lg-10 mx-auto mb-4">
                         <div class="section-title text-center ">
                             <h3 class="top-c-sep">Grow your career with us</h3>
-                            <p>Lorem ipsum dolor sit detudzdae amet, rcquisc adipiscing elit. Aenean socada commodo
-                                ligaui egets dolor. Nullam quis ante tiam sit ame orci eget erovtiu faucid.</p>
+                            
                         </div>
                     </div>
                 </div>
@@ -266,26 +271,7 @@ ul {
                                             <input class="form-control" type="search" placeholder="Enter Your Keywords" aria-label="Search" name="q" method="GET">
                                             </div>
                                     </div>
-                                   <!-- <div class="col-md-6 col-lg-3 my-3">
-                                        <div class="select-container">
-                                            <select class="custom-select">
-                                                <option selected="">Location</option>
-                                                <option value="1">Jaipur</option>
-                                                <option value="2">Pune</option>
-                                                <option value="3">Bangalore</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-3 my-3">
-                                        <div class="select-container">
-                                            <select class="custom-select">
-                                                <option selected="">Select Job Type</option>
-                                                <option value="1">Ui designer</option>
-                                                <option value="2">JS developer</option>
-                                                <option value="3">Web developer</option>
-                                            </select>
-                                        </div>
-                                    </div> -->
+                                   
                                     <div class="col-md-6 col-lg-3 my-3">
                                         <button type="submit" class="btn btn-lg btn-block btn-light btn-custom" id="contact-submit">
                                             Search
@@ -309,16 +295,26 @@ ul {
                                <p></p>
                             <% @job_posts.each do |job_post| %>
                               
-                                <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
-                                    <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
-                                       <a href="<%= job_post_path(job_post)%>"> 
+                                <div  onclick="location.href='<%= job_post_path(job_post)%>';" style="cursor: pointer;" class="job-box d-md-flex align-items-center justify-content-between mb-30" style="text-decoration: none;">
+                               
+                                <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
+                                       
                                        <div class="img-holder mr-md-4 mb-md-0 mb-4 mx-auto mx-md-0 d-md-none d-lg-flex">
                                             JB
-                                        </div></a>
+                                        </div>
+                                       
                                         <div class="job-content">
-                                            <h5 class="text-center text-md-left"><%= job_post.title %> | <%= job_post.company.name %></h5>
+                                       
+                                            <div class="d-flex">
+                                              <h4 class="mr-1  ff-open-sans font-weight-bold">
+                                              <%= job_post.title %> 
+                                              </h4> |
+                                              <h4 class="ml-1 ff-open-sans text-secondary">
+                                              <%= job_post.company.name %>
+                                              </h4>
+                                            </div>
                                             
-                                            <ul class="d-md-flex flex-wrap text-capitalize ff-open-sans">
+                                            <ul class="p-0 mt-3 d-md-flex flex-wrap text-capitalize ff-open-sans">
                                                 <li class="mr-md-4">
                                                     <i class="zmdi zmdi-pin mr-2"></i> <%= job_post.location %>
                                                 </li>
@@ -329,9 +325,13 @@ ul {
                                                     <i class="zmdi zmdi-time mr-2"></i> <%= job_post.mode %>
                                                 </li>
                                             </ul>
+                                           
                                         </div>
+                                        
                                     </div>
-                                 <% unless company_signed_in? %>   
+                                  
+                                 
+                                 <% unless ( company_signed_in? || (current_user &&  user_signed_in? && current_user.is_admin==true) )%>   
                                    <% if (current_user && job_post.job_applications.where(user_id: current_user.id).empty?) %>
                                         <div class="job-right my-4 flex-shrink-0">
                                             <%=form_for(job_post,:action=>"update") do |f| %>
@@ -351,7 +351,26 @@ ul {
                                         </div>
                                     <% end %>
                                    <% end %>
-                                </div>
+                              
+
+
+                                           <!-- Delete -->
+                                            <% if current_user &&  user_signed_in? && current_user.is_admin==true  %>
+                                                
+
+                                                <%= form_with url: "/job_post/delete", method: :delete do |f| %>
+                                        
+                                                         <%= hidden_field_tag 'id', job_post.id %>
+                                                        <%= f.button :submit , :name=>"question",  :class=> " d-flex btn btn-danger " , :style=>"float:right" do %> 
+                                                            <span>Delete</span>
+                                                           
+                                                        <% end %>
+                                                   
+                                                <%end%>
+                                            <% end %>
+                              
+                                   </div>
+
                                
                             <% end%>
                             
